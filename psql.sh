@@ -32,7 +32,7 @@ fi
 
 
 if test -z "$PSQL_PAGER"; then
-	PSQL_PAGER='less -SX --header 2'
+	export PSQL_PAGER='less -SX --header 2'
 fi
 
 
