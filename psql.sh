@@ -1,7 +1,7 @@
 #!/bin/sh
 
 
-ENV='Using host environment ...'
+ENV="\033[90mHOST ENVIRONMENT\033[0m"
 
 
 if test -n "$1"; then
