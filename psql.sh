@@ -1,7 +1,7 @@
 #!/bin/sh
 
 
-ENV_FILE=
+ENV='Using host environment ...'
 
 
 if test -n "$1"; then
@@ -28,6 +28,8 @@ if test -n "$ENV_FILE"; then
 	. "$ENV_FILE"
 	set +a
 
+	ENV="$ENV_FILE"
+
 fi
 
 
@@ -37,7 +39,7 @@ fi
 
 
 printf "\n"
-printf "      \033[1mENV\033[0m: $ENV_FILE\n"
+printf "      \033[1mENV\033[0m: $ENV\n"
 printf "    \033[1mPAGER\033[0m: $PSQL_PAGER\n"
 printf "\n"
 printf "     \033[1mHOST\033[0m: $PGHOST\n"
