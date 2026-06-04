@@ -1,6 +1,13 @@
 #!/bin/sh
 
 
+command -v psql > /dev/null \
+	|| {
+		printf "\n  Cannot find \033[1mpsql\033[0m.\n\n"
+		exit 1
+	}
+
+
 ENV="\033[90mHOST\033[0m"
 
 
