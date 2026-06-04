@@ -1,73 +1,70 @@
 #!/bin/sh
 
+# Improve robustness and portability
+set -eu
 
-command -v psql > /dev/null \
-	|| {
-		printf "\n  Cannot find \033[1mpsql\033[0m.\n\n"
-		exit 1
-	}
+# Check for psql dependency
+if ! command -v psql >/dev/null 2>&1; then
+	printf "Error: psql not found.\n" >&2
+	exit 1
+fi
 
-
-ENV="\033[90mHOST\033[0m"
-
-
-if test -n "$1"; then
-
-	if test -f ".$1.env"; then
+# Determine environment file
+ENV_FILE=""
+if [ -n "${1:-}" ]; then
+	if [ -f ".$1.env" ]; then
 		ENV_FILE=".$1.env"
-	elif test -f "$1"; then
+	elif [ -f "$1" ]; then
 		ENV_FILE="$1"
 	else
-		printf " \"$1\" not found. Aborting...\n"
+		printf "Error: Configuration file '%s' not found.\n" "$1" >&2
 		exit 1
 	fi
-
-elif test -f '.env'; then
-
-	ENV_FILE='.env'
-
+elif [ -f ".env" ]; then
+	ENV_FILE=".env"
 fi
 
-
-if test -n "$ENV_FILE"; then
-
-	set -a
+# Load environment variables
+if [ -n "$ENV_FILE" ]; then
+	# shellcheck source=/dev/null
 	. "$ENV_FILE"
-	set +a
-
-	ENV="$ENV_FILE"
-
+	ENV_DISPLAY="$ENV_FILE"
+else
+	ENV_DISPLAY="Default"
 fi
 
+# Set defaults if not provided
+export PSQL_PAGER="${PSQL_PAGER:-less -SX --header 2}"
+export PGCLIENTENCODING="${PGCLIENTENCODING:-UTF8}"
 
-if test -z "$PSQL_PAGER"; then
-	export PSQL_PAGER='less -SX --header 2'
+if [ -z "${PGTZ:-}" ]; then
+	# Portable way to get TZ on many systems
+	if [ -h /etc/localtime ]; then
+		export PGTZ="$(readlink /etc/localtime | sed 's|.*zoneinfo/||')"
+	else
+		export PGTZ="UTC"
+	fi
 fi
 
-if test -z "$PGCLIENTENCODING"; then
-	export PGCLIENTENCODING=UTF8
-fi
+# UI Output
+cat <<EOF
 
-if test -z "$PGTZ"; then
-	export PGTZ=$(readlink /etc/localtime | sed 's|.*zoneinfo/||')
-fi
+      ENV: ${ENV_DISPLAY}
+    PAGER: ${PSQL_PAGER}
+ ENCODING: ${PGCLIENTENCODING}
+ TIMEZONE: ${PGTZ}
 
+     HOST: ${PGHOST:-localhost}
+     PORT: ${PGPORT:-5432}
+     USER: ${PGUSER:-$(whoami)}
+ DATABASE: ${PGDATABASE:-postgres}
 
-printf "\n"
-printf "      \033[1mENV\033[0m: $ENV\n"
-printf "    \033[1mPAGER\033[0m: $PSQL_PAGER\n"
-printf " \033[1mENCODING\033[0m: $PGCLIENTENCODING\n"
-printf " \033[1mTIMEZONE\033[0m: $PGTZ\n"
-printf "\n"
-printf "     \033[1mHOST\033[0m: $PGHOST\n"
-printf "     \033[1mPORT\033[0m: $PGPORT\n"
-printf "     \033[1mUSER\033[0m: $PGUSER\n"
-printf " \033[1mDATABASE\033[0m: $PGDATABASE\n"
-printf "\n"
+EOF
 
-
+# Execute psql
 PROMPT_TEMPLATE='%[%033[1;7m%] %R %[%033[0m%] '
 
 psql \
 	-v PROMPT1="$PROMPT_TEMPLATE" \
-	-v PROMPT2="$PROMPT_TEMPLATE"
+	-v PROMPT2="$PROMPT_TEMPLATE" \
+	"$@"
