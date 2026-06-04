@@ -2,4 +2,4 @@
 
 all:
 
-	@install -m 744 psql.sh ~/.local/bin/pg
+	@install -m 744 -v psql.sh ~/.local/bin/pg
