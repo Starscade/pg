@@ -30,7 +30,7 @@ if [ -n "$ENV_FILE" ]; then
 	. "$ENV_FILE"
 	ENV_DISPLAY="$ENV_FILE"
 else
-	ENV_DISPLAY="Default"
+	ENV_DISPLAY="<DEFAULT>"
 fi
 
 # Set defaults if not provided
