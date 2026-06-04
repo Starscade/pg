@@ -37,10 +37,20 @@ if test -z "$PSQL_PAGER"; then
 	export PSQL_PAGER='less -SX --header 2'
 fi
 
+if test -z "$PGCLIENTENCODING"; then
+	export PGCLIENTENCODING=UTF8
+fi
+
+if test -z "$PGTZ"; then
+	export PGTZ=$(readlink /etc/localtime | sed 's|.*zoneinfo/||')
+fi
+
 
 printf "\n"
 printf "      \033[1mENV\033[0m: $ENV\n"
 printf "    \033[1mPAGER\033[0m: $PSQL_PAGER\n"
+printf " \033[1mENCODING\033[0m: $PGCLIENTENCODING\n"
+printf " \033[1mTIMEZONE\033[0m: $PGTZ\n"
 printf "\n"
 printf "     \033[1mHOST\033[0m: $PGHOST\n"
 printf "     \033[1mPORT\033[0m: $PGPORT\n"
