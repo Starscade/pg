@@ -54,10 +54,10 @@ cat <<EOF
  ENCODING: ${PGCLIENTENCODING}
  TIMEZONE: ${PGTZ}
 
-     HOST: ${PGHOST:-localhost}
+     HOST: ${PGHOST:-/tmp/.s.PGSQL.5432}
      PORT: ${PGPORT:-5432}
      USER: ${PGUSER:-$(whoami)}
- DATABASE: ${PGDATABASE:-postgres}
+ DATABASE: ${PGDATABASE:-$(whoami)}
 
 EOF
 
