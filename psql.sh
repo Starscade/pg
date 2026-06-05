@@ -83,6 +83,7 @@ if [ -n "$SQL_QUERY" ]; then
 	psql -c "$SQL_QUERY" \
 		--field-separator ',' \
 		--no-align \
+		--pset pager=off \
 		--tuples-only
 else
 	psql \
