@@ -1,70 +1,62 @@
 #!/bin/sh
 
-# Improve robustness and portability
-set -eu
-
-# Check for psql dependency
-if ! command -v psql >/dev/null 2>&1; then
-	printf "Error: psql not found.\n" >&2
+print_err() {
+	printf "\n  \033[1;31mERR\033[0m: ${1}\n\n"
 	exit 1
-fi
+}
 
-# Determine environment file
+check_command() {
+	command -v "$1" >/dev/null || {
+		print_err "Cannot find \033[1m${1}\033[0m."
+	}
+}
+
+set_env() {
+	printenv "$1" || export "$1"="$2"
+}
+
+check_command psql
+
 ENV_FILE=""
-if [ -n "${1:-}" ]; then
-	if [ -f ".$1.env" ]; then
-		ENV_FILE=".$1.env"
-	elif [ -f "$1" ]; then
+if [ -n "$1" ]; then
+	if [ -f "$1" ]; then
 		ENV_FILE="$1"
+	elif [ -f ".$1.env" ]; then
+		ENV_FILE=".$1.env"
 	else
-		printf "Error: Configuration file '%s' not found.\n" "$1" >&2
-		exit 1
+		print_err "Cannot find \033[1m${ENV_FILE}\033[0m."
 	fi
 elif [ -f ".env" ]; then
 	ENV_FILE=".env"
 fi
 
-# Load environment variables
-if [ -n "$ENV_FILE" ]; then
-	# shellcheck source=/dev/null
+printenv ENV_FILE && {
 	. "$ENV_FILE"
 	ENV_DISPLAY="$ENV_FILE"
-else
-	ENV_DISPLAY="<DEFAULT>"
-fi
+} || ENV_DISPLAY="\033[90mDEFAULT\033[0m"
 
-# Set defaults if not provided
-export PSQL_PAGER="${PSQL_PAGER:-less -SX --header 2}"
-export PGCLIENTENCODING="${PGCLIENTENCODING:-UTF8}"
+set_env PGCLIENTENCODING UTF8
+set_env PGDATABASE postgres
+set_env PGHOST 127.0.0.1
+set_env PGOPTIONS "--timezone=$(date +%z | head -c 3)"
+set_env PGPORT 5432
+set_env PGPROMPT '%[%033[1;7m%] %R %[%033[0m%] '
+set_env PGUSER postgres
+set_env PSQL_PAGER 'less -SX --header 2'
 
-if [ -z "${PGTZ:-}" ]; then
-	# Portable way to get TZ on many systems
-	if [ -h /etc/localtime ]; then
-		export PGTZ="$(readlink /etc/localtime | sed 's|.*zoneinfo/||')"
-	else
-		export PGTZ="UTC"
-	fi
-fi
-
-# UI Output
-cat <<EOF
-
-      ENV: ${ENV_DISPLAY}
-    PAGER: ${PSQL_PAGER}
- ENCODING: ${PGCLIENTENCODING}
- TIMEZONE: ${PGTZ}
-
-     HOST: ${PGHOST:-/tmp/.s.PGSQL.5432}
-     PORT: ${PGPORT:-5432}
-     USER: ${PGUSER:-$(whoami)}
- DATABASE: ${PGDATABASE:-$(whoami)}
-
-EOF
-
-# Execute psql
-PROMPT_TEMPLATE='%[%033[1;7m%] %R %[%033[0m%] '
+printf "\n"
+printf "      \033[1mENV\033[0m: ${ENV_DISPLAY}\n"
+printf "    \033[1mPAGER\033[0m: ${PSQL_PAGER}\n"
+printf " \033[1mENCODING\033[0m: ${PGCLIENTENCODING}\n"
+printf "  \033[1mOPTIONS\033[0m: ${PGOPTIONS}\n"
+printf "\n"
+printf "     \033[1mHOST\033[0m: ${PGHOST}\n"
+printf "     \033[1mPORT\033[0m: ${PGPORT}\n"
+printf "     \033[1mUSER\033[0m: ${PGUSER}\n"
+printf " \033[1mDATABASE\033[0m: ${PGDATABASE}\n"
+printf "\n"
 
 psql \
-	-v PROMPT1="$PROMPT_TEMPLATE" \
-	-v PROMPT2="$PROMPT_TEMPLATE" \
+	-v PROMPT1="$PGPROMPT" \
+	-v PROMPT2="$PGPROMPT" \
 	"$@"
