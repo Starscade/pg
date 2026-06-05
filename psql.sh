@@ -59,7 +59,7 @@ fi
 set_env PGCLIENTENCODING UTF8
 set_env PGDATABASE postgres
 set_env PGHOST 127.0.0.1
-set_env PGOPTIONS "--timezone=$(date +%z | head -c 3)"
+set_env PGOPTIONS "-c timezone=$(date +%z | head -c 3)"
 set_env PGPORT 5432
 set_env PGPROMPT '%[%033[1;7m%] %R %[%033[0m%] '
 set_env PGUSER postgres
