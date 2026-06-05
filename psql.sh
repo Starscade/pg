@@ -87,6 +87,7 @@ if [ -n "$SQL_QUERY" ]; then
 		| head -n -1
 else
 	psql \
+		--pset linestyle=unicode \
 		-v PROMPT1="$PGPROMPT" \
 		-v PROMPT2="$PGPROMPT"
 fi
