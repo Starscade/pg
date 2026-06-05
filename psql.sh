@@ -12,7 +12,7 @@ check_command() {
 }
 
 set_env() {
-	printenv "$1" || export "$1"="$2"
+	printenv "$1" >/dev/null || export "$1"="$2"
 }
 
 check_command psql
