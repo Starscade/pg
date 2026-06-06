@@ -15,14 +15,20 @@ set_env() {
 	printenv "$1" >/dev/null || export "$1"="$2"
 }
 
+check_command pg_dump
+check_command pg_restore
 check_command psql
 
+DUMP_TO=""
 ENV_FILE=""
 SQL_QUERY=""
-VERBOSE=""
 
 while [ "$#" -gt 0 ]; do
 	case "$1" in
+		--dump)
+			shift
+			DUMP_TO="$1"
+			;;
 		--env)
 			shift
 			if [ -f "$1" ]; then
@@ -36,9 +42,6 @@ while [ "$#" -gt 0 ]; do
 		--sql)
 			shift
 			SQL_QUERY="$1"
-			;;
-		--verbose)
-			VERBOSE=1
 			;;
 		*)
 			print_err "\033[1m${1}\033[0m is not a recognized argument."
@@ -65,7 +68,19 @@ set_env PGPROMPT '%[%033[1;7m%] %R %[%033[0m%] '
 set_env PGUSER postgres
 set_env PSQL_PAGER 'less -SX --header 2'
 
-if [ -n "$VERBOSE" ]; then
+if [ -n "$DUMP_TO" ] && [ -d "$(dirname "$DUMP_TO")" ]; then
+	pg_dump > "$DUMP_TO" \
+		&& exit \
+		|| print_err 'Failed to save.'
+fi
+
+if [ -n "$SQL_QUERY" ]; then
+	psql -c "$SQL_QUERY" \
+		--field-separator '	' \
+		--no-align \
+		--pset pager=off \
+		| head -n -1
+else
 	printf "\n"
 	printf "      \033[1mENV\033[0m: ${ENV_DISPLAY}\n"
 	printf "    \033[1mPAGER\033[0m: ${PSQL_PAGER}\n"
@@ -77,15 +92,7 @@ if [ -n "$VERBOSE" ]; then
 	printf "     \033[1mUSER\033[0m: ${PGUSER}\n"
 	printf " \033[1mDATABASE\033[0m: ${PGDATABASE}\n"
 	printf "\n"
-fi
 
-if [ -n "$SQL_QUERY" ]; then
-	psql -c "$SQL_QUERY" \
-		--field-separator '	' \
-		--no-align \
-		--pset pager=off \
-		| head -n -1
-else
 	psql \
 		--pset linestyle=unicode \
 		-v PROMPT1="$PGPROMPT" \
