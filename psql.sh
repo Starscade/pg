@@ -6,9 +6,8 @@ print_err() {
 }
 
 check_command() {
-	command -v "$1" >/dev/null || {
-		print_err "Cannot find \033[1m${1}\033[0m."
-	}
+	command -v "$1" >/dev/null \
+		|| print_err "Cannot find \033[1m${1}\033[0m."
 }
 
 set_env() {
