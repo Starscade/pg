@@ -20,6 +20,7 @@ check_command psql
 
 DUMP_TO=""
 ENV_FILE=""
+SCHEMA_ONLY=""
 SQL_QUERY=""
 
 while [ "$#" -gt 0 ]; do
@@ -27,6 +28,11 @@ while [ "$#" -gt 0 ]; do
 		--dump)
 			shift
 			DUMP_TO="$1"
+			;;
+		--dump-schema)
+			shift
+			DUMP_TO="$1"
+			SCHEMA_ONLY='--schema-only'
 			;;
 		--env)
 			shift
@@ -68,7 +74,7 @@ set_env PGUSER postgres
 set_env PSQL_PAGER 'less -SX --header 2'
 
 if [ -n "$DUMP_TO" ] && [ -d "$(dirname "$DUMP_TO")" ]; then
-	pg_dump > "$DUMP_TO" \
+	pg_dump "$SCHEMA_ONLY" > "$DUMP_TO" \
 		&& exit \
 		|| print_err 'Failed to save.'
 fi
