@@ -2,7 +2,9 @@
 
 ###### INLINE VARIABLES
 
-`PGHOST=foo.bar.com PGPASSWORD=jelszo pg`
+```
+PGHOST=foo.bar.com PGPASSWORD=jelszo pg
+```
 
 ###### EXPORTED VARIABLES
 
