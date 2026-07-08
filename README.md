@@ -15,7 +15,7 @@ pg
 
 ###### DOTENV FILE
 
-`pg ~/.foo.env` (or `pg foo` if `.foo.env` is in the current directory.)
+`pg --env ~/.foo.env` (or `pg --env foo` if `.foo.env` is in the current directory.)
 
 ###### EXPORTED DOTENV
 
@@ -25,4 +25,9 @@ set -a
 set +a
 
 pg
+```
+###### ONE-LINER SQL
+
+```
+pg --sql "SELECT * FROM public.foo ;"
 ```
