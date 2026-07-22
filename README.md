@@ -28,8 +28,14 @@ set +a
 
 pg
 ```
-###### ONE-LINER SQL
 
+###### ONE-LINER SQL
 ```
 pg --sql "SELECT * FROM public.foo ;"
+```
+
+###### RAW EXPORT
+
+```
+pg --dump ./foo.sql
 ```
