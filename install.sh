@@ -75,6 +75,9 @@ while [ "$#" -gt 0 ]; do
 				print_err "Cannot find \033[1m${1}\033[0m."
 			fi
 			;;
+		--json)
+			CSV_TO_JSON=1
+			;;
 		--query | -q)
 			shift
 			SQL_QUERY="$1"
@@ -111,11 +114,13 @@ if [ -n "$DUMP_TO" ] && [ -d "$(dirname "$DUMP_TO")" ]; then
 fi
 
 if [ -n "$SQL_QUERY" ]; then
-	psql -c "$SQL_QUERY" \
-		--field-separator '	' \
-		--no-align \
-		--pset pager=off \
-		| head -n -1
+	if [ -n "$CSV_TO_JSON" ]; then
+		psql -Atc \
+			"SELECT json_agg(t) FROM (${SQL_QUERY}) t"
+	else
+		psql --csv -c "$SQL_QUERY" \
+			--pset pager=off
+	fi
 else
 	printf "\n"
 	printf "      \033[1mENV\033[0m: ${ENV_DISPLAY}\n"
