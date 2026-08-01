@@ -42,6 +42,7 @@ while [ "$#" -gt 0 ]; do
 	case "$1" in
 		--version)
 			VERSION='v0.2.0 (main)'
+			echo "$VERSION"
 			exit
 			;;
 		--uninstall)
