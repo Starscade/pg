@@ -1,8 +1,23 @@
 #!/bin/sh
 
+test $(basename "$0") = 'install.sh' && {
+	INSTALL_DIR=~/.local/bin
+	test -n "$1" && test -d "$1" \
+		&& INSTALL_DIR="$1"
+	INSTALL_PATH="${INSTALL_DIR}/pg"
+	mkdir -pv "$INSTALL_DIR" \
+	&& cp -iv "$0" "$INSTALL_PATH" \
+	&& chmod -v 0755 "$INSTALL_PATH"
+	exit
+}
+
 print_err() {
 	printf "\n  \033[1;31mERR\033[0m: ${1}\n\n"
 	exit 1
+}
+
+print_ok() {
+	printf "\n  \033[1;32mOK\033[0m  ${1}\n\n"
 }
 
 check_command() {
@@ -25,6 +40,21 @@ SQL_QUERY=""
 
 while [ "$#" -gt 0 ]; do
 	case "$1" in
+		--version)
+			VERSION='v0.2.0 (main)'
+			exit
+			;;
+		--uninstall)
+			rm -iv "$0"
+			exit
+			;;
+		--update)
+			curl -fLsSo "$(command -v "$0")" \
+				'https://pg.angus.sh/install.sh' \
+				&& print_ok "\033[1m$($(command -v "$0") --version)\033[0m" \
+				|| print_err 'Upgrade failed!'
+			exit
+			;;
 		--dump)
 			shift
 			DUMP_TO="$1"
