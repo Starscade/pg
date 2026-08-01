@@ -75,7 +75,7 @@ while [ "$#" -gt 0 ]; do
 				print_err "Cannot find \033[1m${1}\033[0m."
 			fi
 			;;
-		--sql)
+		--query | -q)
 			shift
 			SQL_QUERY="$1"
 			;;
