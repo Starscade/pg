@@ -31,7 +31,7 @@ pg
 
 ###### ONE-LINER SQL
 ```
-pg --sql "SELECT * FROM public.foo ;"
+pg --query "SELECT * FROM public.foo ;"
 ```
 
 ###### RAW EXPORT
