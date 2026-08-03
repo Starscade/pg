@@ -38,10 +38,6 @@ set_env() {
 	printenv "$1" >/dev/null || export "$1"="$2"
 }
 
-check_command pg_dump
-check_command pg_restore
-check_command psql
-
 DUMP_MODE=""
 DUMP_TO=""
 ENV_FILE=""
@@ -122,10 +118,13 @@ set_env PGUSER postgres
 set_env PSQL_PAGER 'less -SX --header 2'
 
 if [ -n "$DUMP_TO" ] && [ -d "$(dirname "$DUMP_TO")" ]; then
+	check_command pg_dump
 	pg_dump "$DUMP_MODE" > "$DUMP_TO" \
 		&& exit \
 		|| panic 'Failed to save.'
 fi
+
+check_command psql
 
 if [ -n "$SQL_QUERY" ]; then
 	if [ -n "$CSV_TO_JSON" ]; then
