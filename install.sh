@@ -61,30 +61,30 @@ while [ "$#" -gt 0 ]; do
 			exit
 			;;
 		--dump)
-			shift
-			DUMP_TO="$1"
+			DUMP_TO="$2"
+			shift 2
 			;;
 		--dump-schema)
-			shift
-			DUMP_TO="$1"
+			DUMP_TO="$2"
 			SCHEMA_ONLY='--schema-only'
+			shift 2
 			;;
 		--env)
-			shift
-			if [ -f "$1" ]; then
-				ENV_FILE="$1"
-			elif [ -f ".$1.env" ]; then
-				ENV_FILE=".$1.env"
+			if [ -f "$2" ]; then
+				ENV_FILE="$2"
+			elif [ -f ".$2.env" ]; then
+				ENV_FILE=".$2.env"
 			else
-				print_err "Cannot find \033[1m${1}\033[0m."
+				print_err "Cannot find \033[1m${2}\033[0m."
 			fi
+			shift 2
 			;;
 		--json)
 			CSV_TO_JSON=1
 			;;
 		--query | -q)
-			shift
-			SQL_QUERY="$1"
+			SQL_QUERY="$2"
+			shift 2
 			;;
 		*)
 			print_err "\033[1m${1}\033[0m is not a recognized argument."
