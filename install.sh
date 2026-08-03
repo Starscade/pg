@@ -130,7 +130,7 @@ fi
 if [ -n "$SQL_QUERY" ]; then
 	if [ -n "$CSV_TO_JSON" ]; then
 		psql -Atc \
-			"SELECT json_agg(t) FROM (${SQL_QUERY}) t"
+			"SELECT jsonb_agg(t) FROM (${SQL_QUERY}) t"
 	else
 		psql --csv -c "$SQL_QUERY" \
 			--pset pager=off
