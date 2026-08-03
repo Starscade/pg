@@ -11,13 +11,17 @@ test $(basename "$0") = 'install.sh' && {
 	exit
 }
 
+_print() {
+	printf "\n \033[1;${2}m${1}\033[0m${3}\n\n"
+}
+
 print_err() {
-	printf "\n \033[1;31mERR\033[0m: ${1}\n\n"
+	_print ERR 31 ": ${1}"
 	exit 1
 }
 
 print_ok() {
-	printf "\n \033[1;32mOK\033[0m  ${1}\n\n"
+	_print OK 32 " ${1}"
 }
 
 check_command() {
