@@ -15,7 +15,7 @@ _print() {
 	printf "\n \033[1;${2}m${1}\033[0m${3}\n\n"
 }
 
-print_err() {
+panic() {
 	_print ERR 31 ": ${1}"
 	exit 1
 }
@@ -26,7 +26,7 @@ print_ok() {
 
 check_command() {
 	command -v "$1" >/dev/null \
-		|| print_err "Cannot find \033[1m${1}\033[0m."
+		|| panic "Cannot find \033[1m${1}\033[0m."
 }
 
 set_env() {
@@ -57,7 +57,7 @@ while [ "$#" -gt 0 ]; do
 			curl -fLsSo "$(command -v "$0")" \
 				'https://pg.angus.sh/install.sh' \
 				&& print_ok "\033[1m$($(command -v "$0") --version)\033[0m" \
-				|| print_err 'Upgrade failed!'
+				|| panic 'Upgrade failed!'
 			exit
 			;;
 		--dump)
@@ -75,7 +75,7 @@ while [ "$#" -gt 0 ]; do
 			elif [ -f ".$2.env" ]; then
 				ENV_FILE=".$2.env"
 			else
-				print_err "Cannot find \033[1m${2}\033[0m."
+				panic "Cannot find \033[1m${2}\033[0m."
 			fi
 			shift 2
 			;;
@@ -87,7 +87,7 @@ while [ "$#" -gt 0 ]; do
 			shift 2
 			;;
 		*)
-			print_err "\033[1m${1}\033[0m is not a recognized argument."
+			panic "\033[1m${1}\033[0m is not a recognized argument."
 			;;
 	esac
 	shift
@@ -114,7 +114,7 @@ set_env PSQL_PAGER 'less -SX --header 2'
 if [ -n "$DUMP_TO" ] && [ -d "$(dirname "$DUMP_TO")" ]; then
 	pg_dump "$SCHEMA_ONLY" > "$DUMP_TO" \
 		&& exit \
-		|| print_err 'Failed to save.'
+		|| panic 'Failed to save.'
 fi
 
 if [ -n "$SQL_QUERY" ]; then
