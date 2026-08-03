@@ -42,9 +42,9 @@ check_command pg_dump
 check_command pg_restore
 check_command psql
 
+DUMP_MODE=""
 DUMP_TO=""
 ENV_FILE=""
-SCHEMA_ONLY=""
 SQL_QUERY=""
 
 while [ "$#" -gt 0 ]; do
@@ -79,9 +79,14 @@ while [ "$#" -gt 0 ]; do
 			DUMP_TO="$2"
 			shift
 			;;
-		--dump-schema)
+		--dump-data)
+			DUMP_MODE='--data-only'
 			DUMP_TO="$2"
-			SCHEMA_ONLY='--schema-only'
+			shift
+			;;
+		--dump-schema)
+			DUMP_MODE='--schema-only'
+			DUMP_TO="$2"
 			shift
 			;;
 		--json)
@@ -117,7 +122,7 @@ set_env PGUSER postgres
 set_env PSQL_PAGER 'less -SX --header 2'
 
 if [ -n "$DUMP_TO" ] && [ -d "$(dirname "$DUMP_TO")" ]; then
-	pg_dump "$SCHEMA_ONLY" > "$DUMP_TO" \
+	pg_dump "$DUMP_MODE" > "$DUMP_TO" \
 		&& exit \
 		|| panic 'Failed to save.'
 fi
