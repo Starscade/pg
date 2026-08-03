@@ -20,6 +20,11 @@ panic() {
 	exit 1
 }
 
+print_debug() {
+	test -n "$DEBUG" && \
+		_print DEBUG 34 ": ${1}"
+}
+
 print_ok() {
 	_print OK 32 " ${1}"
 }
@@ -60,15 +65,6 @@ while [ "$#" -gt 0 ]; do
 				|| panic 'Upgrade failed!'
 			exit
 			;;
-		--dump)
-			DUMP_TO="$2"
-			shift 2
-			;;
-		--dump-schema)
-			DUMP_TO="$2"
-			SCHEMA_ONLY='--schema-only'
-			shift 2
-			;;
 		--env)
 			if [ -f "$2" ]; then
 				ENV_FILE="$2"
@@ -77,14 +73,23 @@ while [ "$#" -gt 0 ]; do
 			else
 				panic "Cannot find \033[1m${2}\033[0m."
 			fi
-			shift 2
+			shift
+			;;
+		--dump)
+			DUMP_TO="$2"
+			shift
+			;;
+		--dump-schema)
+			DUMP_TO="$2"
+			SCHEMA_ONLY='--schema-only'
+			shift
 			;;
 		--json)
 			CSV_TO_JSON=1
 			;;
 		--query | -q)
 			SQL_QUERY="$2"
-			shift 2
+			shift
 			;;
 		*)
 			panic "\033[1m${1}\033[0m is not a recognized argument."
