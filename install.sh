@@ -17,7 +17,7 @@ print_err() {
 }
 
 print_ok() {
-	printf "\n  \033[1;32mOK\033[0m  ${1}\n\n"
+	printf "\n \033[1;32mOK\033[0m  ${1}\n\n"
 }
 
 check_command() {
