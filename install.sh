@@ -92,6 +92,10 @@ while [ "$#" -gt 0 ]; do
 			SQL_QUERY="$2"
 			shift
 			;;
+		--select-from | --sf)
+			SQL_QUERY="SELECT * FROM ${2}"
+			shift
+			;;
 		*)
 			panic "\033[1m${1}\033[0m is not a recognized argument."
 			;;
