@@ -144,7 +144,8 @@ if [ -n "$SQL_QUERY" ]; then
 			psql --html -tc "$SQL_QUERY" \
 				--pset pager=off \
 			| tr -d '\n' \
-			| sed 's/ border="1"// ; s/ valign="top"// ; s/> \+</></g'
+			| sed 's/ border="1"// ; s/ valign="top"// ; s/> \+</></g' \
+			&& printf "\n"
 		;;
 		JSON)
 			psql -Atc \
