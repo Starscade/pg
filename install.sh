@@ -88,7 +88,7 @@ while [ "$#" -gt 0 ]; do
 			;;
 		--mode)
 			TABLE_MODE="$2"
-			break
+			shift
 			;;
 		--query | -q)
 			SQL_QUERY="$2"
