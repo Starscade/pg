@@ -46,7 +46,7 @@ SQL_QUERY=""
 while [ "$#" -gt 0 ]; do
 	case "$1" in
 		--version)
-			VERSION='v0.2.0 (main)'
+			VERSION='v0.2.4 (main) [dba5eac]'
 			echo "$VERSION"
 			exit
 			;;
