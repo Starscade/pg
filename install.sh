@@ -135,7 +135,6 @@ check_command psql
 if [ -n "$SQL_QUERY" ]; then
 	test -z "$TABLE_MODE" && panic 'No mode specified!'
 	NORMAL_TABLE_MODE="$(printf '%s' "$TABLE_MODE" | tr '[:lower:]' '[:upper:]')"
-	echo "$NORMAL_TABLE_MODE"
 	case "$NORMAL_TABLE_MODE" in
 		CSV)
 			psql --csv -c "$SQL_QUERY" \
