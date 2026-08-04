@@ -1,12 +1,12 @@
 #!/bin/sh
 
-test $(basename "$0") = 'install.sh' && {
-	INSTALL_DIR=~/.local/bin
+test "${0##*/}" = 'install.sh' && {
+	INSTALL_DIR="${HOME}/.local/bin"
 	test -n "$1" && test -d "$1" \
 		&& INSTALL_DIR="$1"
 	INSTALL_PATH="${INSTALL_DIR}/pg"
-	mkdir -pv "$INSTALL_DIR" \
-	&& cp -iv "$0" "$INSTALL_PATH" \
+	mkdir -p "$INSTALL_DIR" \
+	&& cp -i "$0" "$INSTALL_PATH" \
 	&& chmod -v 0755 "$INSTALL_PATH"
 	exit
 }
