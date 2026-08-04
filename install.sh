@@ -88,7 +88,7 @@ while [ "$#" -gt 0 ]; do
 			;;
 		--mode)
 			TABLE_MODE="$2"
-			shift
+			break
 			;;
 		--query | -q)
 			SQL_QUERY="$2"
@@ -133,21 +133,24 @@ fi
 check_command psql
 
 if [ -n "$SQL_QUERY" ]; then
-	case "$TABLE_MODE" in
-		csv)
+	test -z "$TABLE_MODE" && panic 'No mode specified!'
+	NORMAL_TABLE_MODE="$(printf '%s' "$TABLE_MODE" | tr '[:lower:]' '[:upper:]')"
+	echo "$NORMAL_TABLE_MODE"
+	case "$NORMAL_TABLE_MODE" in
+		CSV)
 			psql --csv -c "$SQL_QUERY" \
 				--pset pager=off
 		;;
-		html)
+		HTML)
 			psql --html -tc "$SQL_QUERY" \
 				--pset pager=off
 		;;
-		json)
+		JSON)
 			psql -Atc \
 				"SELECT jsonb_agg(t) FROM (${SQL_QUERY}) t"
 		;;
 		*)
-			panic 'Mode not recognized!'
+			panic "\"${TABLE_MODE}\" is not a recognized output format!"
 		;;
 	esac
 else
