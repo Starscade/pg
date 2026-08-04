@@ -149,7 +149,7 @@ if [ -n "$SQL_QUERY" ]; then
 		;;
 		JSON)
 			psql -Atc \
-				"SELECT jsonb_agg(t) FROM (${SQL_QUERY}) t"
+				"SELECT json_agg(t) FROM (${SQL_QUERY}) t"
 		;;
 		*)
 			panic "\"${TABLE_MODE}\" is not a recognized output format!"
