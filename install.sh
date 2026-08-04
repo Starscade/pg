@@ -143,7 +143,8 @@ if [ -n "$SQL_QUERY" ]; then
 		;;
 		HTML)
 			psql --html -tc "$SQL_QUERY" \
-				--pset pager=off
+				--pset pager=off \
+			| sed 's/ border="1"// ; s/ valign="top"//'
 		;;
 		JSON)
 			psql -Atc \
