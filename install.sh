@@ -47,7 +47,7 @@ TABLE_MODE=csv
 while [ "$#" -gt 0 ]; do
 	case "$1" in
 		--version)
-			VERSION='v0.2.4 (main) [dba5eac]'
+			VERSION='v0.2.13 (main) [ed9739b]'
 			echo "$VERSION"
 			exit
 			;;
