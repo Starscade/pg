@@ -92,7 +92,7 @@ while [ "$#" -gt 0 ]; do
 			SQL_QUERY="$2"
 			shift
 			;;
-		--select-from | --sf)
+		--select-from | -S)
 			SQL_QUERY="SELECT * FROM ${2}"
 			shift
 			;;
