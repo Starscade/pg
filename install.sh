@@ -42,6 +42,7 @@ DUMP_MODE=""
 DUMP_TO=""
 ENV_FILE=""
 SQL_QUERY=""
+TABLE_MODE=csv
 
 while [ "$#" -gt 0 ]; do
 	case "$1" in
@@ -85,8 +86,9 @@ while [ "$#" -gt 0 ]; do
 			DUMP_TO="$2"
 			shift
 			;;
-		--json)
-			CSV_TO_JSON=1
+		--mode)
+			TABLE_MODE="$2"
+			shift
 			;;
 		--query | -q)
 			SQL_QUERY="$2"
@@ -131,13 +133,23 @@ fi
 check_command psql
 
 if [ -n "$SQL_QUERY" ]; then
-	if [ -n "$CSV_TO_JSON" ]; then
-		psql -Atc \
-			"SELECT jsonb_agg(t) FROM (${SQL_QUERY}) t"
-	else
-		psql --csv -c "$SQL_QUERY" \
-			--pset pager=off
-	fi
+	case "$TABLE_MODE" in
+		csv)
+			psql --csv -c "$SQL_QUERY" \
+				--pset pager=off
+		;;
+		html)
+			psql --html -tc "$SQL_QUERY" \
+				--pset pager=off
+		;;
+		json)
+			psql -Atc \
+				"SELECT jsonb_agg(t) FROM (${SQL_QUERY}) t"
+		;;
+		*)
+			panic 'Mode not recognized!'
+		;;
+	esac
 else
 	printf "\n"
 	printf "      \033[1mENV\033[0m: ${ENV_DISPLAY}\n"
