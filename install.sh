@@ -64,7 +64,7 @@ while [ "$#" -gt 0 ]; do
 				|| panic 'Upgrade failed!'
 			exit
 			;;
-		--help| -?)
+		--help)
 			curl -LsS "https://${CMD_NAME}.angus.sh/README.md" 2>/dev/null
 			exit
 			;;
@@ -76,7 +76,7 @@ while [ "$#" -gt 0 ]; do
 			else
 				panic "Cannot find \033[1m${2}\033[0m."
 			fi
-			shift 2
+			shift
 			;;
 		--dump)
 			DUMP_TO="$2"
