@@ -76,7 +76,7 @@ while [ "$#" -gt 0 ]; do
 			else
 				panic "Cannot find \033[1m${2}\033[0m."
 			fi
-			shift
+			shift 2
 			;;
 		--dump)
 			DUMP_TO="$2"
