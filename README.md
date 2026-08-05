@@ -52,7 +52,7 @@ pg -Q foo --fmt csv
 ```
 
 Again, this can all be accomplished with stock `psql`, but the advantage here
-is uniformity. Plus, it allows us to add additional table formats in the
+is uniformity. Plus, it allows us to add additional table formats in the future
 without breaking backwards compatibility. For example:
 ```sh
 pg -Q foo --fmt json
