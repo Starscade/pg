@@ -66,3 +66,4 @@ pg
 
 This functions exactly like the command line in `psql` (because it is), but
 with a few options enabled by default such as a custom prompt and table style.
+
