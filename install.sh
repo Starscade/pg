@@ -156,8 +156,8 @@ if [ -n "$SQL_QUERY" ]; then
 		JSON)
 			check_command jq
 			psql -Atc \
-				"SELECT json_agg(t) FROM (${SQL_QUERY}) t" |
-			jq -cM
+				"SELECT json_agg(t) FROM (${SQL_QUERY}) t" \
+			| jq -cM
 		;;
 		*)
 			panic "\"${PRINT_FORMAT}\" is not a recognized output format!"
