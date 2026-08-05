@@ -64,7 +64,7 @@ while [ "$#" -gt 0 ]; do
 				|| panic 'Upgrade failed!'
 			exit
 			;;
-		--help| -h)
+		--help| -?)
 			curl -LsS "https://${CMD_NAME}.angus.sh/README.md" 2>/dev/null
 			exit
 			;;
