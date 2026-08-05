@@ -44,7 +44,7 @@ DUMP_MODE=""
 DUMP_TO=""
 ENV_FILE=""
 SQL_QUERY=""
-TABLE_MODE=csv
+PRINT_FORMAT=csv
 
 while [ "$#" -gt 0 ]; do
 	case "$1" in
@@ -92,8 +92,8 @@ while [ "$#" -gt 0 ]; do
 			DUMP_TO="$2"
 			shift
 			;;
-		--mode)
-			TABLE_MODE="$2"
+		--print-format | --fmt)
+			PRINT_FORMAT="$2"
 			shift
 			;;
 		--query | -q)
@@ -139,9 +139,9 @@ fi
 check_command psql
 
 if [ -n "$SQL_QUERY" ]; then
-	test -z "$TABLE_MODE" && panic 'No mode specified!'
-	NORMAL_TABLE_MODE="$(printf '%s' "$TABLE_MODE" | tr '[:lower:]' '[:upper:]')"
-	case "$NORMAL_TABLE_MODE" in
+	test -z "$PRINT_FORMAT" && panic 'No mode specified!'
+	NORMAL_PRINT_FORMAT="$(printf '%s' "$PRINT_FORMAT" | tr '[:lower:]' '[:upper:]')"
+	case "$NORMAL_PRINT_FORMAT" in
 		CSV)
 			psql --csv -c "$SQL_QUERY" \
 				--pset pager=off
@@ -158,7 +158,7 @@ if [ -n "$SQL_QUERY" ]; then
 				"SELECT json_agg(t) FROM (${SQL_QUERY}) t"
 		;;
 		*)
-			panic "\"${TABLE_MODE}\" is not a recognized output format!"
+			panic "\"${PRINT_FORMAT}\" is not a recognized output format!"
 		;;
 	esac
 else

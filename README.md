@@ -42,20 +42,20 @@ regular tables on output. They're CSV. By default, `pg` uses the `--csv` and
 
 PostgreSQL also has an HTML option: `--html`. We can utilize this in `pg` via:
 ```sh
-pg -Q foo --mode html
+pg -Q foo --fmt html
 ```
 
-If you're writing a script which needs to switch between modes, `pg`'s `--mode`
+If you're writing a script which needs to switch between modes, `pg`'s `--fmt`
 option can be set to `csv` to achieve the default behavior:
 ```sh
-pg -Q foo --mode csv
+pg -Q foo --fmt csv
 ```
 
 Again, this can all be accomplished with stock `psql`, but the advantage here
 is uniformity. Plus, it allows us to add additional table formats in the
 without breaking backwards compatibility. For example:
 ```sh
-pg -Q foo --mode json
+pg -Q foo --fmt json
 ```
 
 Of course, working directly inside the PostgreSQL REPL is probably what you'll
