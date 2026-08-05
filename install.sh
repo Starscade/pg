@@ -1,10 +1,12 @@
 #!/bin/sh
 
+CMD_NAME=pg
+
 test "${0##*/}" = 'install.sh' && {
 	INSTALL_DIR="${HOME}/.local/bin"
 	test -n "$1" && test -d "$1" \
 		&& INSTALL_DIR="$1"
-	INSTALL_PATH="${INSTALL_DIR}/pg"
+	INSTALL_PATH="${INSTALL_DIR}/${CMD_NAME}"
 	mkdir -p "$INSTALL_DIR" \
 	&& cp -i "$0" "$INSTALL_PATH" \
 	&& chmod -v 0755 "$INSTALL_PATH"
@@ -57,9 +59,13 @@ while [ "$#" -gt 0 ]; do
 			;;
 		--update)
 			curl -fLsSo "$(command -v "$0")" \
-				'https://pg.angus.sh/install.sh' \
+				"https://${CMD_NAME}.angus.sh/install.sh" \
 				&& print_ok "\033[1m$($(command -v "$0") --version)\033[0m" \
 				|| panic 'Upgrade failed!'
+			exit
+			;;
+		--help| -h)
+			curl -LsS "https://${CMD_NAME}.angus.sh/README.md" 2>/dev/null
 			exit
 			;;
 		--env)
