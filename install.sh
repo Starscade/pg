@@ -149,10 +149,15 @@ if [ -n "$SQL_QUERY" ]; then
 				--pset pager=off
 		;;
 		HTML)
-			psql --html -tc "$SQL_QUERY" \
+			psql --html -c "$SQL_QUERY" \
 				--pset pager=off \
 			| tr -d '\n' \
-			| sed 's/ border="1"// ; s/ valign="top"// ; s/> \+</></g' \
+			| sed \
+				-e 's/ border="1"//g' \
+				-e 's/ align="center"//g' \
+				-e 's/ valign="top"//g' \
+				-e 's/<p>.*<\/p>//' \
+				-e 's/>[[:space:]]\+</></g' \
 			&& printf "\n"
 		;;
 		JSON)
