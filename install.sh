@@ -140,7 +140,9 @@ check_command psql
 
 if [ -n "$SQL_QUERY" ]; then
 	test -z "$PRINT_FORMAT" && panic 'No mode specified!'
-	NORMAL_PRINT_FORMAT="$(printf '%s' "$PRINT_FORMAT" | tr '[:lower:]' '[:upper:]')"
+	NORMAL_PRINT_FORMAT=$(
+		printf '%s' "$PRINT_FORMAT" | tr '[:lower:]' '[:upper:]'
+	)
 	case "$NORMAL_PRINT_FORMAT" in
 		CSV)
 			psql --csv -c "$SQL_QUERY" \
