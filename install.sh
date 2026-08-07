@@ -156,7 +156,7 @@ if [ -n "$SQL_QUERY" ]; then
 				-e 's/ border="1"//g' \
 				-e 's/ align="center"//g' \
 				-e 's/ valign="top"//g' \
-				-e 's/<p>.*<\/p>//' \
+				-e 's/<p>.*<br \/><\/p>//' \
 				-e 's/>[[:space:]]\+</></g' \
 			&& printf "\n"
 		;;
