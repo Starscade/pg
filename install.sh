@@ -49,7 +49,7 @@ PRINT_FORMAT=csv
 while [ "$#" -gt 0 ]; do
 	case "$1" in
 		--version)
-			VERSION='v0.2.17 (main) [d5c2b6e]'
+			VERSION='v0.2.30 (main) [b89efae]'
 			echo "$VERSION"
 			exit
 			;;
